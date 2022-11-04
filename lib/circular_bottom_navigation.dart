@@ -27,6 +27,10 @@ class CircularBottomNavigation extends StatefulWidget {
   /// If true, allows a selected tab icon to execute its callback even if it's
   /// already selected.
   final bool allowSelectedIconCallback;
+  final bool showTitle;
+  final Color? circleGradientColor;
+  final double titlePos;
+  final double iconPos;
 
   CircularBottomNavigation(
     this.tabItems, {
@@ -43,6 +47,10 @@ class CircularBottomNavigation extends StatefulWidget {
     this.selectedCallback,
     this.controller,
     this.allowSelectedIconCallback = false,
+    this.showTitle = false,
+    this.circleGradientColor,
+    this.iconPos = 0,
+    this.titlePos = 0,
     backgroundBoxShadow,
   })  : backgroundBoxShadow = backgroundBoxShadow ??
             [BoxShadow(color: Colors.grey, blurRadius: 2.0)],
@@ -183,6 +191,12 @@ class _CircularBottomNavigationState extends State<CircularBottomNavigation>
         child: Container(
           width: widget.circleSize,
           height: widget.circleSize,
+          decoration: BoxDecoration(
+              color: widget.circleGradientColor != null
+                  ? (widget.tabItems[selectedPos!].circleStrokeColor ??
+                      widget.barBackgroundColor)
+                  : Colors.transparent,
+              borderRadius: BorderRadius.circular(widget.circleSize / 2)),
           child: Stack(
             alignment: Alignment.topCenter,
             children: <Widget>[
@@ -197,6 +211,16 @@ class _CircularBottomNavigationState extends State<CircularBottomNavigation>
                           topLeft: Radius.circular(widget.circleSize / 2),
                           topRight: Radius.circular(widget.circleSize / 2),
                         ),
+                        gradient: widget.circleGradientColor != null
+                            ? (LinearGradient(
+                                colors: [
+                                    widget.circleGradientColor!,
+                                    widget.circleGradientColor!
+                                        .withOpacity(0.5),
+                                  ],
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter))
+                            : null,
                         color:
                             widget.tabItems[selectedPos!].circleStrokeColor ??
                                 widget.barBackgroundColor,
@@ -212,6 +236,16 @@ class _CircularBottomNavigationState extends State<CircularBottomNavigation>
                           bottomLeft: Radius.circular(widget.circleSize / 2),
                           bottomRight: Radius.circular(widget.circleSize / 2),
                         ),
+                        gradient: widget.circleGradientColor != null
+                            ? (LinearGradient(
+                                colors: [
+                                    widget.circleGradientColor!
+                                        .withOpacity(0.5),
+                                    widget.circleGradientColor!.withOpacity(0)
+                                  ],
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter))
+                            : null,
                         color:
                             widget.tabItems[selectedPos!].circleStrokeColor ??
                                 widget.barBackgroundColor,
@@ -252,17 +286,26 @@ class _CircularBottomNavigationState extends State<CircularBottomNavigation>
         Positioned(
           child: Transform.scale(
             scale: scaleFactor,
-            child: Icon(
-              widget.tabItems[pos].icon,
-              size: widget.iconsSize,
-              color: iconColor,
-            ),
+            child: widget.tabItems[pos].activeChild != null
+                ? SizedBox(
+                    height: widget.iconsSize,
+                    width: widget.iconsSize,
+                    child: pos == selectedPos
+                        ? widget.tabItems[pos].activeChild
+                        : widget.tabItems[pos].inactiveChild,
+                  )
+                : Icon(
+                    widget.tabItems[pos].icon,
+                    size: widget.iconsSize,
+                    color: iconColor,
+                  ),
           ),
           left: r.center.dx - (widget.iconsSize / 2),
           top: r.center.dy -
               (widget.iconsSize / 2) -
               (_itemsSelectedState[pos] *
-                  ((widget.barHeight / 2) + widget.circleStrokeWidth)),
+                  ((widget.barHeight / 2) + widget.circleStrokeWidth)) -
+              (widget.showTitle && pos != selectedPos ? widget.iconPos : 0),
         ),
       );
 
@@ -280,11 +323,13 @@ class _CircularBottomNavigationState extends State<CircularBottomNavigation>
           height: textHeight,
           child: Center(
             child: Opacity(
-              opacity: opacity,
+              opacity: 1,
               child: Text(
                 widget.tabItems[pos].title,
                 textAlign: TextAlign.center,
-                style: widget.tabItems[pos].labelStyle,
+                style: widget.tabItems[pos].labelStyle.copyWith(
+                    color:
+                        pos == selectedPos ? widget.selectedIconColor : null),
               ),
             ),
           ),
@@ -293,7 +338,8 @@ class _CircularBottomNavigationState extends State<CircularBottomNavigation>
         top: r.top +
             (widget.circleSize / 2) -
             (widget.circleStrokeWidth * 2) +
-            ((1.0 - _itemsSelectedState[pos]) * textHeight),
+            ((1.0 - _itemsSelectedState[pos]) * textHeight) -
+            (widget.showTitle && pos != selectedPos ? widget.titlePos : 0),
       ));
 
       if (pos != selectedPos) {
