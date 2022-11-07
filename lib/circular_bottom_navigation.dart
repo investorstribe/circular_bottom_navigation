@@ -32,6 +32,7 @@ class CircularBottomNavigation extends StatefulWidget {
   final double titlePos;
   final double iconPos;
   final double selectedTitlePos;
+  final double selectedIconPos;
 
   CircularBottomNavigation(
     this.tabItems, {
@@ -53,6 +54,7 @@ class CircularBottomNavigation extends StatefulWidget {
     this.iconPos = 0,
     this.titlePos = 0,
     this.selectedTitlePos = 0,
+    this.selectedIconPos = 0,
     backgroundBoxShadow,
   })  : backgroundBoxShadow = backgroundBoxShadow ??
             [BoxShadow(color: Colors.grey, blurRadius: 2.0)],
@@ -273,7 +275,7 @@ class _CircularBottomNavigationState extends State<CircularBottomNavigation>
             : (selectedPosAnimation.value * sectionsWidth) +
                 (sectionsWidth / 2) -
                 (widget.circleSize / 2),
-        top: maxShadowHeight,
+        top: maxShadowHeight + (widget.showTitle ? widget.selectedIconPos : 0),
       ),
     );
 
@@ -307,7 +309,10 @@ class _CircularBottomNavigationState extends State<CircularBottomNavigation>
               (widget.iconsSize / 2) -
               (_itemsSelectedState[pos] *
                   ((widget.barHeight / 2) + widget.circleStrokeWidth)) -
-              (widget.showTitle && pos != selectedPos ? widget.iconPos : 0),
+              (widget.showTitle && pos != selectedPos ? widget.iconPos : 0) +
+              (widget.showTitle && pos == selectedPos
+                  ? widget.selectedIconPos
+                  : 0),
         ),
       );
 
