@@ -8,6 +8,7 @@ class TabItem {
   Color circleColor;
   Color? circleStrokeColor;
   TextStyle labelStyle;
+  TextStyle? selectedLabelStyle;
 
   TabItem(
     this.icon,
@@ -17,5 +18,6 @@ class TabItem {
     this.inactiveChild,
     this.circleStrokeColor,
     this.labelStyle = const TextStyle(fontWeight: FontWeight.bold),
+    this.selectedLabelStyle,
   });
 }

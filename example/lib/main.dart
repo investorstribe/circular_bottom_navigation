@@ -145,8 +145,10 @@ class _MyHomePageState extends State<MyHomePage> {
       controller: _navigationController,
       selectedPos: selectedPos,
       barHeight: bottomNavBarHeight,
+      selectedIconColor: Colors.black,
       // use either barBackgroundColor or barBackgroundGradient to have a gradient on bar background
       barBackgroundColor: Colors.white,
+      selectedTitlePos: 10,
       // barBackgroundGradient: LinearGradient(
       //   begin: Alignment.bottomCenter,
       //   end: Alignment.topCenter,

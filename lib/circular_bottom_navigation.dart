@@ -31,6 +31,7 @@ class CircularBottomNavigation extends StatefulWidget {
   final Color? circleGradientColor;
   final double titlePos;
   final double iconPos;
+  final double selectedTitlePos;
 
   CircularBottomNavigation(
     this.tabItems, {
@@ -51,6 +52,7 @@ class CircularBottomNavigation extends StatefulWidget {
     this.circleGradientColor,
     this.iconPos = 0,
     this.titlePos = 0,
+    this.selectedTitlePos = 0,
     backgroundBoxShadow,
   })  : backgroundBoxShadow = backgroundBoxShadow ??
             [BoxShadow(color: Colors.grey, blurRadius: 2.0)],
@@ -327,9 +329,11 @@ class _CircularBottomNavigationState extends State<CircularBottomNavigation>
               child: Text(
                 widget.tabItems[pos].title,
                 textAlign: TextAlign.center,
-                style: widget.tabItems[pos].labelStyle.copyWith(
-                    color:
-                        pos == selectedPos ? widget.selectedIconColor : null),
+                style: pos == selectedPos
+                    ? (widget.tabItems[pos].selectedLabelStyle ??
+                        widget.tabItems[pos].labelStyle
+                            .copyWith(color: widget.selectedIconColor))
+                    : widget.tabItems[pos].labelStyle,
               ),
             ),
           ),
@@ -339,7 +343,8 @@ class _CircularBottomNavigationState extends State<CircularBottomNavigation>
             (widget.circleSize / 2) -
             (widget.circleStrokeWidth * 2) +
             ((1.0 - _itemsSelectedState[pos]) * textHeight) -
-            (widget.showTitle && pos != selectedPos ? widget.titlePos : 0),
+            (widget.showTitle && pos != selectedPos ? widget.titlePos : 0) -
+            widget.selectedTitlePos,
       ));
 
       if (pos != selectedPos) {
