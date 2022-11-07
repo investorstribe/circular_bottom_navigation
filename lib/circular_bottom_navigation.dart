@@ -344,7 +344,9 @@ class _CircularBottomNavigationState extends State<CircularBottomNavigation>
             (widget.circleStrokeWidth * 2) +
             ((1.0 - _itemsSelectedState[pos]) * textHeight) -
             (widget.showTitle && pos != selectedPos ? widget.titlePos : 0) -
-            (pos == selectedPos ? widget.selectedTitlePos : 0),
+            (widget.showTitle && pos == selectedPos
+                ? widget.selectedTitlePos
+                : 0),
       ));
 
       if (pos != selectedPos) {
