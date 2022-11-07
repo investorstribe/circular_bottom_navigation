@@ -396,9 +396,9 @@ class _CircularBottomNavigationState extends State<CircularBottomNavigation>
 
   @override
   void dispose() {
-    super.dispose();
     itemsController.dispose();
     _controller!.removeListener(_newSelectedPosNotify);
+    super.dispose();
   }
 }
 
