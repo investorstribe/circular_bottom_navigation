@@ -5,6 +5,7 @@ class TabItem {
   Widget? activeChild;
   Widget? inactiveChild;
   Widget? spotlight;
+  double spotlightPos;
   String title;
   Color circleColor;
   Color? circleStrokeColor;
@@ -19,6 +20,7 @@ class TabItem {
     this.inactiveChild,
     this.circleStrokeColor,
     this.spotlight,
+    this.spotlightPos = 0,
     this.labelStyle = const TextStyle(fontWeight: FontWeight.bold),
     this.selectedLabelStyle,
   });

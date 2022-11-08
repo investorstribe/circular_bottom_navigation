@@ -57,14 +57,14 @@ class CircularBottomNavigation extends StatefulWidget {
     this.selectedIconPos = 0,
     backgroundBoxShadow,
   })  : backgroundBoxShadow = backgroundBoxShadow ??
-            [BoxShadow(color: Colors.grey, blurRadius: 2.0)],
+            [const BoxShadow(color: Colors.grey, blurRadius: 2.0)],
         barBackgroundColor =
             (barBackgroundGradient == null && barBackgroundColor == null)
                 ? Colors.white
                 : barBackgroundColor,
         assert(barBackgroundColor == null || barBackgroundGradient == null,
             "Both barBackgroundColor and barBackgroundGradient can't be not null."),
-        assert(tabItems.length != 0, "tabItems is required");
+        assert(tabItems.isNotEmpty, 'tabItems is required');
 
   @override
   State<StatefulWidget> createState() => _CircularBottomNavigationState();
@@ -72,7 +72,7 @@ class CircularBottomNavigation extends StatefulWidget {
 
 class _CircularBottomNavigationState extends State<CircularBottomNavigation>
     with TickerProviderStateMixin {
-  Curve _animationsCurve = Cubic(0.27, 1.21, .77, 1.09);
+  final Curve _animationsCurve = const Cubic(0.27, 1.21, .77, 1.09);
 
   late AnimationController itemsController;
   late Animation<double> selectedPosAnimation;
@@ -166,7 +166,7 @@ class _CircularBottomNavigationState extends State<CircularBottomNavigation>
     List<Widget> children = [];
 
     // This is the full view transparent background (have free space for circle)
-    children.add(Container(
+    children.add(SizedBox(
       width: fullWidth,
       height: fullHeight,
     ));
@@ -291,6 +291,8 @@ class _CircularBottomNavigationState extends State<CircularBottomNavigation>
           child: Transform.scale(
             scale: scaleFactor,
             child: Stack(
+              clipBehavior: Clip.none,
+              alignment: Alignment.center,
               children: [
                 widget.tabItems[pos].activeChild != null
                     ? SizedBox(
@@ -307,9 +309,10 @@ class _CircularBottomNavigationState extends State<CircularBottomNavigation>
                       ),
                 widget.tabItems[pos].spotlight != null && pos != selectedPos
                     ? Positioned(
+                        top: widget.tabItems[pos].spotlightPos,
                         child: widget.tabItems[pos].spotlight!,
                       )
-                    : SizedBox.shrink()
+                    : const SizedBox.shrink()
               ],
             ),
           ),
@@ -334,7 +337,7 @@ class _CircularBottomNavigationState extends State<CircularBottomNavigation>
         opacity = 1.0;
       }
       children.add(Positioned(
-        child: Container(
+        child: SizedBox(
           width: r.width,
           height: textHeight,
           child: Center(
@@ -379,7 +382,8 @@ class _CircularBottomNavigationState extends State<CircularBottomNavigation>
         children.add(
           Positioned.fromRect(
             child: ClipRRect(
-              borderRadius: BorderRadius.vertical(top: Radius.circular(40.0)),
+              borderRadius:
+                  const BorderRadius.vertical(top: Radius.circular(40.0)),
               child: GestureDetector(onTap: _selectedCallback),
             ),
             rect: selectedRect,
