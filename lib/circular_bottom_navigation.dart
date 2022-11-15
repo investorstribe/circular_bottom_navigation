@@ -34,6 +34,7 @@ class CircularBottomNavigation extends StatefulWidget {
   final double selectedTitlePos;
   final double selectedIconPos;
   final ValueNotifier<bool>? changeIndex;
+  final Function()? onTap;
 
   CircularBottomNavigation(
     this.tabItems, {
@@ -57,6 +58,7 @@ class CircularBottomNavigation extends StatefulWidget {
     this.selectedTitlePos = 0,
     this.selectedIconPos = 0,
     this.changeIndex,
+    this.onTap,
     backgroundBoxShadow,
   })  : backgroundBoxShadow = backgroundBoxShadow ??
             [const BoxShadow(color: Colors.grey, blurRadius: 2.0)],
@@ -373,6 +375,9 @@ class _CircularBottomNavigationState extends State<CircularBottomNavigation>
           Positioned.fromRect(
             child: GestureDetector(
               onTap: () {
+                if (widget.onTap != null) {
+                  widget.onTap!();
+                }
                 if (widget.changeIndex == null || widget.changeIndex!.value) {
                   _controller!.value = pos;
                 }
