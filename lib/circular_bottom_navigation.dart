@@ -375,12 +375,17 @@ class _CircularBottomNavigationState extends State<CircularBottomNavigation>
           Positioned.fromRect(
             child: GestureDetector(
               onTap: () {
+                bool tap = false;
                 if (widget.onTap != null) {
-                  widget.onTap!();
+                  tap = widget.onTap!();
                 }
-                if (widget.changeIndex == null || widget.changeIndex!.value) {
-                  _controller!.value = pos;
+                if (tap) {
+                  return;
                 }
+                _controller!.value = pos;
+                // if (widget.changeIndex == null || widget.changeIndex!.value) {
+                //   _controller!.value = pos;
+                // }
               },
             ),
             rect: r,
